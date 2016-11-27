@@ -4,90 +4,44 @@ using System.Linq;
 
 namespace Developer.Test
 {
-    class CalcProperty<T> : DynProperty<T>, IDynamicProperty<T>, IClient, IDisposable
+    class CalcProperty<T> : IDynamicProperty<T>
     {
-        public CalcProperty(Func<T> read, Action<T> write) : base(read())
+        public CalcProperty(Func<T> read, Action<T> write)
         {
             _read = read;
             _write = write;
+            _cache = new SubsValue<T>(_read());
         }
 
-        public void SubscribeTo<T1>(DynProperty<T1> to)
+        public T Value
         {
-           // _dependencies[to] = to.Subscribe(Invalidate);
-        }
-
-        private void Invalidate()
-        {
-            _invalid = true /*_invalid & !to.Value.Equals(value)*/;
-            //todo: make separate dependency
-            NotifySubscribers(_value);
-        }
-
-        public override T Value
-        {
-            get
-            {
-                if (_invalid)
-                {
-                    ReleaseLinks();
-                    ThreadStack.Instance.Current.Push(this);
-                    _value = _read();
-                    ThreadStack.Instance.Current.Pop();
-                    _invalid = false;
-                }
-                return _value;
-            }
-            set
-            {
-                //todo: do not update if valid and the same
-                //if (!_invalid && _value.Equals(value)) return;
-                _write(value);
-                //_invalid = true;
-                NotifySubscribers(value);
-            }
+            get { return Read(); }
+            set { Write(value); }
         }
 
         public IDisposable Subscribe(Action<T> callback)
         {
-            var subscription = new Subscription(Unsubscribe);
-            _callbacks[subscription] = callback;
-            return subscription;
+            return _cache.Subscribe(callback);
         }
 
-        private T _value;
+        private T Read()
+        {
+            if (_invalid)
+            {
+                _cache.Value = _read();
+                _invalid = false;
+            }
+            return _cache.Value;
+        }
+
+        private void Write(T value)
+        {
+            _invalid = true;
+            _write(value);
+        }
         private readonly Func<T> _read;
         private readonly Action<T> _write;
+        private readonly SubsValue<T> _cache;
         private bool _invalid = false;
-        private readonly Dictionary<object, IDisposable> _dependencies = new Dictionary<object, IDisposable>();
-        private readonly Dictionary<IDisposable, Action<T>> _callbacks = new Dictionary<IDisposable, Action<T>>();
-
-        private void NotifySubscribers(T value)
-        {
-            foreach (var callback in _callbacks.Values.AsParallel())
-            {
-                callback(value);
-            }
-        }
-
-        private void Unsubscribe(IDisposable subscription)
-        {
-            _callbacks.Remove(subscription);
-        }
-
-
-        private void ReleaseLinks()
-        {
-            foreach (var dependency in _dependencies.Values.AsParallel())
-            {
-                dependency.Dispose();
-            }
-            _dependencies.Clear();
-        }
-
-        public void Dispose()
-        {
-            ReleaseLinks();
-        }
     }
 }
