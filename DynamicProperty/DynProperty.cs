@@ -1,50 +1,25 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace Developer.Test
 {
-    class DynProperty<T>
+    class DynProperty<T>:IDynamicProperty<T>
     {
         public DynProperty(T initialValue)
         {
-            Value = initialValue;
-        }
-        public virtual T Value {
-            get
-            {
-                Spam();
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                Notify();
-            }
-        }
-        public IDisposable Subscribe(Action callback)
-        {
-            var subscription = new Subscription(Unsubscribe);
-            _callbacks[subscription] = callback;
-            return subscription;
-        }
-        private void Spam()
-        {
-            ThreadStack.Instance.Current.Peek().SubscribeTo(this);
+            _value = new SubsValue<T>(initialValue);
         }
 
-        private void Notify()
+        public virtual T Value
         {
-            foreach (var callback in _callbacks.Values)
-            {
-                callback();
-            }
+            get { return _value.Value; }
+            set { _value.Value = value; }
         }
-        private void Unsubscribe(IDisposable subscription)
+
+        public IDisposable Subscribe(Action<T> callback)
         {
-            _callbacks.Remove(subscription);
+            return _value.Subscribe(callback);
         }
-        private T _value;
-        private readonly IDictionary<IDisposable, Action> _callbacks = new ConcurrentDictionary<IDisposable, Action>();
+
+        private readonly SubsValue<T> _value;
     }
 }

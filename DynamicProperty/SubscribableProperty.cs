@@ -17,7 +17,7 @@ namespace Developer.Test
 
         public void SubscribeTo<T1>(DynProperty<T1> to)
         {
-            _dependencies[to] = to.Subscribe(Invalidate);
+           // _dependencies[to] = to.Subscribe(Invalidate);
         }
 
         public void Invalidate()

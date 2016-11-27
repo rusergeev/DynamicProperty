@@ -15,8 +15,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(T initialValue)
         {
-            var simpleProperty = new DynProperty<T>(initialValue);
-            return new CalcProperty<T>(() => simpleProperty.Value, (value) => simpleProperty.Value = value);
+            return new DynProperty<T>(initialValue);
         }
 
         /// <summary>

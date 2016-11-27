@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubscribableProperty.cs" />
     <Compile Include="Subscription.cs" />
+    <Compile Include="SubsValue.cs" />
     <Compile Include="ThreadStack.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
