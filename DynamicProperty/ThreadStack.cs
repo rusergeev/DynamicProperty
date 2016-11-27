@@ -25,16 +25,16 @@ namespace Developer.Test
                 return _instance;
             }
         }
-        public Stack<IClient> Current {
+        public Stack<_IClient> Current {
             get { 
                 var id = Thread.CurrentThread.ManagedThreadId;
                 if (!_instance._map.ContainsKey(id))
-                    _instance._map[id] = new Stack<IClient>();
+                    _instance._map[id] = new Stack<_IClient>();
                 return _instance._map[id];
             }
         }
         private static volatile ThreadStack _instance;
         private static readonly object _protection = new object();
-        private readonly IDictionary<int, Stack<IClient>> _map = new ConcurrentDictionary<int, Stack<IClient>>();
+        private readonly IDictionary<int, Stack<_IClient>> _map = new ConcurrentDictionary<int, Stack<_IClient>>();
     }
 }

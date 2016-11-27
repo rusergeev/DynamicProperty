@@ -1,37 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Developer.Test
 {
-    class CalcProperty<T> : IDynamicProperty<T>
+    class CalculatedProperty<T> : Wrapper<SubscribableProperty<T>, T>
     {
-        public CalcProperty(Func<T> read, Action<T> write)
+        public CalculatedProperty(Func<T> read, Action<T> write) : base(new SubscribableProperty<T>(read()))
         {
             _read = read;
             _write = write;
-            _cache = new SubsValue<T>(_read());
         }
 
-        public T Value
+        public override T Value
         {
             get { return Read(); }
             set { Write(value); }
-        }
-
-        public IDisposable Subscribe(Action<T> callback)
-        {
-            return _cache.Subscribe(callback);
         }
 
         private T Read()
         {
             if (_invalid)
             {
-                _cache.Value = _read();
+                _value.Value = _read();
                 _invalid = false;
             }
-            return _cache.Value;
+            return _value.Value;
         }
 
         private void Write(T value)
@@ -41,7 +33,6 @@ namespace Developer.Test
         }
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private readonly IDynamicProperty<T> _cache;
         private bool _invalid = false;
     }
 }

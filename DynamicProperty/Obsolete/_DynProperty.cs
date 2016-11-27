@@ -2,11 +2,11 @@
 
 namespace Developer.Test
 {
-    class DynProperty<T>:IDynamicProperty<T>
+    class _DynProperty<T>:IDynamicProperty<T>
     {
-        public DynProperty(T initialValue)
+        public _DynProperty(T initialValue)
         {
-            _value = new SubsValue<T>(initialValue);
+            _value = new SubscribableProperty<T>(initialValue);
         }
 
         public T Value

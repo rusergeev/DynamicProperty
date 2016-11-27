@@ -2,7 +2,7 @@
 
 namespace Developer.Test
 {
-    class Subscription : IDisposable
+    sealed class Subscription : IDisposable
     {
         public Subscription(Action<Subscription> unsubscribe)
         {

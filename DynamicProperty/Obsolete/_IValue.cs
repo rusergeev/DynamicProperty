@@ -2,7 +2,7 @@
 
 namespace Developer.Test
 {
-    interface IValue<T>
+    interface _IValue<T>
     {
         T Value { get; set; }
         void Invalidate();

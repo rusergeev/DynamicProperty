@@ -15,7 +15,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(T initialValue)
         {
-            return new DynProperty<T>(initialValue);
+            return new BasicProperty<T>(initialValue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write)
         {
-            return new CalcProperty<T>(read, write);
+            return new CalculatedProperty<T>(read, write);
         }
     }
 }

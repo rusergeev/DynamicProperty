@@ -11,11 +11,11 @@ using Developer.Test;
 
 namespace Developer.Test
 {
-    sealed class AsyncSetProperty<T>: IDynamicProperty<T>
+    sealed class _AsyncSetProperty<T>: IDynamicProperty<T>
     {
-        public AsyncSetProperty(IValue<T> value)
+        public _AsyncSetProperty(_IValue<T> iValue)
         {
-            _value = value;
+            _iValue = iValue;
         }
 
         public T Value
@@ -31,7 +31,7 @@ namespace Developer.Test
                         _lock.AcquireReaderLock(TimeSpan.FromSeconds(1));
                         try
                         {
-                            val = _value.Value;
+                            val = _iValue.Value;
                             done = true;
                         }
                         finally
@@ -55,7 +55,7 @@ namespace Developer.Test
                     _lock.AcquireWriterLock(TimeSpan.FromSeconds(1));
                     try
                     {
-                        _value.Value = value;
+                        _iValue.Value = value;
                         NotifySubscribers(value);
                         done = true;
                     }
@@ -81,7 +81,7 @@ namespace Developer.Test
             return subscription;
         }
 
-        private readonly IValue<T> _value;
+        private readonly _IValue<T> _iValue;
         private readonly Dictionary<Subscription, Action<T>> _callbacks = new Dictionary<Subscription, Action<T>>();
         private readonly ReaderWriterLock _lock = new ReaderWriterLock();
 
