@@ -15,7 +15,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(T initialValue)
         {
-            return new BasicProperty<T>(initialValue);
+            return new DependencySourceProperty<T>(initialValue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write)
         {
-            return new CalculatedProperty<T>(read, write);
+            return new DependencyTargetProperty<T>(read, write);
         }
     }
 }

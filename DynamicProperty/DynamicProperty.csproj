@@ -44,7 +44,7 @@
     <Compile Include="BasicProperty.cs" />
     <Compile Include="Wrapper.cs" />
     <Compile Include="Obsolete\_CalcProperty.cs" />
-    <Compile Include="DependableProperty.cs" />
+    <Compile Include="DependencySourceProperty.cs" />
     <Compile Include="DynamicProperty.cs" />
     <Compile Include="Obsolete\_DynProperty.cs" />
     <Compile Include="Obsolete\_IClient.cs" />

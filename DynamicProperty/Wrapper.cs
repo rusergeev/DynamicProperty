@@ -2,9 +2,9 @@
 
 namespace Developer.Test
 {
-    class Wrapper<TContainer, T> : IDynamicProperty<T> where TContainer : IDynamicProperty<T>
+    class Wrapper<T> : IDynamicProperty<T>
     {
-        protected Wrapper(TContainer value)
+        protected Wrapper(IDynamicProperty<T> value)
         {
             _value = value;
         }
