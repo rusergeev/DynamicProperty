@@ -15,8 +15,8 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(T initialValue)
         {
-            // ??
-            throw new NotImplementedException();
+            var simpleProperty = new DynProperty<T>(initialValue);
+            return new CalcProperty<T>(() => simpleProperty.Value, (value) => simpleProperty.Value = value);
         }
 
         /// <summary>
@@ -42,8 +42,7 @@
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write)
         {
-            // ??
-            throw new NotImplementedException();
+            return new CalcProperty<T>(read, write);
         }
     }
 }
