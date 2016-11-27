@@ -41,7 +41,7 @@ namespace Developer.Test
         }
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private readonly SubsValue<T> _cache;
+        private readonly IDynamicProperty<T> _cache;
         private bool _invalid = false;
     }
 }

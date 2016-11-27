@@ -20,6 +20,6 @@ namespace Developer.Test
             return _value.Subscribe(callback);
         }
 
-        private readonly SubsValue<T> _value;
+        private readonly IDynamicProperty<T> _value;
     }
 }
