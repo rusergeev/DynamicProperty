@@ -17,7 +17,7 @@ namespace Developer.Test
         {
             get
             {
-                if (Valid)
+                if (_valid)
                 {
                     return base.Value;
                 }
@@ -30,7 +30,7 @@ namespace Developer.Test
                 var check = targets.Pop();
                 Debug.Assert(check == this, "Thread stack is broken.");
 
-                Valid = true;
+                _valid = true;
 
                 return value;
             }
@@ -53,7 +53,7 @@ namespace Developer.Test
 
         private void Invalidate()
         {
-            Valid = false;
+            _valid = false;
             var source = this as IDependencySource;
             Debug.Assert(source != null, "Cast must be right from this to IDependencySource");
             source.NotifyAllTargets();
@@ -62,6 +62,6 @@ namespace Developer.Test
         private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private bool Valid { get; set; } = true;
+        private bool _valid = true;
     }
 }

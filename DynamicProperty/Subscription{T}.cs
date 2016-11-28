@@ -17,10 +17,12 @@ namespace Developer.Test
         {
             return _callbacks.Values;
         }
+
         private void Unsubscribe(IDisposable subscription)
         {
             _callbacks.Remove(subscription);
         }
+
         private readonly IDictionary<IDisposable, T> _callbacks = new ConcurrentDictionary<IDisposable, T>();
     }
 }
