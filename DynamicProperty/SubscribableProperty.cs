@@ -9,6 +9,15 @@ namespace Developer.Test
             _value = initialValue;
         }
 
+        protected SubscribableProperty()
+        {
+        }
+
+        protected void Init(T initialValue)
+        {
+            _value = initialValue;
+        }
+
         public virtual T Value
         {
             get { return _value; }
@@ -26,7 +35,7 @@ namespace Developer.Test
 
         public void Notify(T value)
         {
-            foreach (var callback in subscriptions.All())
+            foreach (var callback in subscriptions)
             {
                 callback(value);
             }

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Developer.Test
 {
-    class Subscription<T>
+    class Subscription<T>: IEnumerable<T>
     {
         public IDisposable Create(T callback)
         {
@@ -13,9 +14,14 @@ namespace Developer.Test
             return subscription;
         }
 
-        public ICollection<T> All()
+        public IEnumerator<T> GetEnumerator()
         {
-            return _callbacks.Values;
+            return _callbacks.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         private void Unsubscribe(IDisposable subscription)
@@ -24,5 +30,6 @@ namespace Developer.Test
         }
 
         private readonly IDictionary<IDisposable, T> _callbacks = new ConcurrentDictionary<IDisposable, T>();
+
     }
 }

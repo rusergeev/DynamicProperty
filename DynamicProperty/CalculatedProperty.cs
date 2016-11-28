@@ -7,10 +7,12 @@ namespace Developer.Test
 {
     class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
-        public CalculatedProperty(Func<T> read, Action<T> write) : base(read())
+        public CalculatedProperty(Func<T> read, Action<T> write)
         {
             _read = read;
             _write = write;
+
+            base.Init(EvaluatingRead());
         }
 
         public new T Value
@@ -23,18 +25,22 @@ namespace Developer.Test
                 }
 
                 ClearDependency();
-
-                var targets = ThreadStack.Instance.Current;
-                targets.Push(this);
-                var value = _read();
-                var check = targets.Pop();
-                Debug.Assert(check == this, "Thread stack is broken.");
-
+                var value = EvaluatingRead();
                 _valid = true;
 
                 return value;
             }
             set { base.Value = value; }
+        }
+
+        private T EvaluatingRead()
+        {
+            var targets = ThreadStack.Instance;
+            targets.Push(this);
+            var value = _read();
+            var check = targets.Pop();
+            Debug.Assert(check == this, "Thread stack is broken.");
+            return value;
         }
 
         private void ClearDependency()

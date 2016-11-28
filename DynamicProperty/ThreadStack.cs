@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace Developer.Test
@@ -25,7 +26,32 @@ namespace Developer.Test
             }
         }
 
-        public Stack<IDependencyTarget> Current
+        public void Push(IDependencyTarget target)
+        {
+            Current.Push(target);
+        }
+
+        public IDependencyTarget Pop()
+        {
+            var target = Current.Pop();
+            if (!Current.Any())
+            {
+                _map.Remove(Thread.CurrentThread.ManagedThreadId);
+            }
+            return target;
+        }
+
+        public IDependencyTarget Peek()
+        {
+            return Current.Peek();
+        }
+
+        public bool Any()
+        {
+            return Current.Any();
+        }
+
+        private Stack<IDependencyTarget> Current
         {
             get
             {
@@ -38,7 +64,7 @@ namespace Developer.Test
 
         private static volatile ThreadStack _instance;
         private static readonly object _protection = new object();
-        //todo: remove key if empty
+
         private readonly IDictionary<int, Stack<IDependencyTarget>> _map =
             new ConcurrentDictionary<int, Stack<IDependencyTarget>>();
     }

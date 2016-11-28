@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Developer.Test
 {
@@ -7,6 +6,15 @@ namespace Developer.Test
     {
         public BasicProperty(T initialValue) : base(initialValue)
         {
+        }
+
+        protected BasicProperty()
+        {
+        }
+
+        protected new void Init(T initialValue)
+        {
+            base.Init(initialValue);
         }
 
         public new virtual T Value
@@ -21,12 +29,12 @@ namespace Developer.Test
 
         public IDisposable Subscribe(Action notify)
         {
-            return dependencies.Create(notify);
+            return _dependencies.Create(notify);
         }
 
         public void NotifyAllTargets()
         {
-            foreach (var notify in dependencies.All())
+            foreach (var notify in _dependencies)
             {
                 notify();
             }
@@ -34,14 +42,14 @@ namespace Developer.Test
 
         private void RegisterDependency()
         {
-            var targets = ThreadStack.Instance.Current;
+            var targets = ThreadStack.Instance;
             if (targets.Any())
             {
                 targets.Peek().SubscribeTo(this);
             }
         }
 
-        private readonly Subscription<Action> dependencies = new Subscription<Action>();
+        private readonly Subscription<Action> _dependencies = new Subscription<Action>();
     }
 
 
