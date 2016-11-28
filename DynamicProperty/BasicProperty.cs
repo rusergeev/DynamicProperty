@@ -1,14 +1,49 @@
-﻿namespace Developer.Test
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+
+namespace Developer.Test
 {
-    class BasicProperty<T> : ResponcibilityChain<T>
+    class BasicProperty<T> : IDynamicProperty<T>
     {
-        public BasicProperty(T value) : base(new SubscribableProperty<T>(value))
+        public BasicProperty(T initialValue)
         {
+            _value = initialValue;
         }
 
-        public override bool Valid
+        public T Value
         {
-            get { return true; }
+            get { return _value; }
+            set
+            {
+                _value = value;
+                Notify(value);
+            }
         }
+
+        private void Notify(T value)
+        {
+            foreach (var callback in _callbacks.Values)
+            {
+                callback(value);
+            }
+        }
+
+        public IDisposable Subscribe(Action<T> callback)
+        {
+            var subscription = new Subscription(Unsubscribe);
+            _callbacks[subscription] = callback;
+            return subscription;
+        }
+
+        private void Unsubscribe(IDisposable subscription)
+        {
+            _callbacks.Remove(subscription);
+        }
+
+        private T _value;
+
+        private readonly IDictionary<IDisposable, Action<T>> _callbacks =
+            new ConcurrentDictionary<IDisposable, Action<T>>();
     }
 }

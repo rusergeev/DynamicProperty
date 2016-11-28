@@ -2,35 +2,31 @@
 
 namespace Developer.Test
 {
-    class CalculatedProperty<T> : ResponcibilityChain<T>
+    class CalculatedProperty<T> : BasicProperty<T>, IValidDynamicProperty<T>
     {
-        public CalculatedProperty(Func<T> read, Action<T> write) : base(new SubscribableProperty<T>(read()))
+        public CalculatedProperty(Func<T> read, Action<T> write) : base(read())
         {
             _read = read;
             _write = write;
         }
 
-        public override T Value
+        public new T Value
         {
             get
             {
-                if (!_valid)
+                if (!Valid)
                 {
-                    _value.Value = _read();
-                    _valid = true;
+                    base.Value = _read();
+                    Valid = true;
                 }
-                return _value.Value;
+                return base.Value;
             }
             set { _write(value); }
         }
 
-        public override bool Valid
-        {
-            get { return _valid; }
-        }
+        public bool Valid { get; private set; } = true;
 
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private bool _valid = true;
     }
 }

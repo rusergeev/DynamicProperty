@@ -1,34 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Developer.Test
 {
-    class DependencySourceProperty<T> : ResponcibilityChain<T>
+    class DependencySourceProperty<T> : IValidDynamicProperty<T>
     {
-        public DependencySourceProperty(T initialValue) :  base(new BasicProperty<T>(initialValue) )
+        public DependencySourceProperty(T initialValue)
         {
+            _value = new BasicProperty<T>(initialValue);
         }
-        public DependencySourceProperty(Func<T> read, Action<T> write) : base(new CalculatedProperty<T>(read, write))
+
+        protected DependencySourceProperty(Func<T> read, Action<T> write)
         {
+            _value = new CalculatedProperty<T>(read, write);
         }
-        public override T Value
+
+        public T Value
         {
             get
             {
-                T val = _value.Value;
                 var targets = ThreadStack.Instance.Current;
                 if (targets.Any())
                 {
                     targets.Peek().SubscribeTo(this);
                 }
-                return val;
+                return _value.Value;
             }
             set { _value.Value = value; }
         }
+
+        public bool Valid { get; protected set; }
+
+        public IDisposable Subscribe(Action<T> callback)
+        {
+            return _value.Subscribe(callback);
+        }
+
+        private readonly IDynamicProperty<T> _value;
     }
 }
