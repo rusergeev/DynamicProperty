@@ -5,12 +5,17 @@ using System.Threading;
 
 namespace Developer.Test
 {
+    /// <summary>
+    /// builds stacks for a current thread, can work with several threads
+    /// </summary>
     sealed class ThreadStack
     {
         private ThreadStack()
         {
         }
-
+        /// <summary>
+        /// Singleton standard pattern
+        /// </summary>
         public static ThreadStack Instance
         {
             get
@@ -25,12 +30,18 @@ namespace Developer.Test
                 return _instance;
             }
         }
-
+        /// <summary>
+        /// pushes an <see cref="IDependencyTarget"/> to current thread stack
+        /// </summary>
+        /// <param name="target"> a dependency target object </param>
         public void Push(IDependencyTarget target)
         {
             Current.Push(target);
         }
-
+        /// <summary>
+        /// pops an <see cref="IDependencyTarget"/> from current thread stack
+        /// </summary>
+        /// <returns>a dependency target object </returns>
         public IDependencyTarget Pop()
         {
             var target = Current.Pop();
@@ -40,12 +51,18 @@ namespace Developer.Test
             }
             return target;
         }
-
+        /// <summary>
+        /// peaks an <see cref="IDependencyTarget"/> from current thread stack
+        /// </summary>
+        /// <returns>a dependency target object</returns>
         public IDependencyTarget Peek()
         {
             return Current.Peek();
         }
-
+        /// <summary>
+        /// Indicates if there stack is not empty
+        /// </summary>
+        /// <returns> true if there is any target dependency object on the current thread stack </returns>
         public bool Any()
         {
             return Current.Any();
