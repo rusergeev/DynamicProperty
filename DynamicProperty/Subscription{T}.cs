@@ -15,7 +15,7 @@ namespace Developer.Test
         /// created a subscription
         /// </summary>
         /// <param name="callback"> callback to call when notify </param>
-        /// <returns> Disposable object </returns>
+        /// <returns>an object which can be disposed to cancel the subscription </returns>
         public IDisposable Create(T callback)
         {
             var subscription = new Subscription(Unsubscribe);
