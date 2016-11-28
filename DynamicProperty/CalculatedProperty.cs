@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Developer.Test
 {
@@ -30,7 +31,29 @@ namespace Developer.Test
         {
             get
             {
-                return base.Value;
+                T val = default(T);
+                var done = false;
+                while (!done)
+                {
+                    try
+                    {
+                        _rwl.AcquireReaderLock(TimeSpan.FromSeconds(1));
+                        try
+                        {
+                            val = base.Value;
+                            done = true;
+                        }
+                        finally
+                        {
+                            _rwl.ReleaseReaderLock();
+                        }
+                    }
+                    catch (ApplicationException)
+                    {
+                        done = false;
+                    }
+                }
+                return val;
             }
             set { _write(value); }
         }
@@ -61,15 +84,35 @@ namespace Developer.Test
 
         private T EvaluatingRead()
         {
-            lock (_protection)
+            T value = default(T);
+            var done = false;
+            while (!done)
             {
-                var targets = ThreadStack.Instance;
-                targets.Push(this);
-                var value = _read();
-                var check = targets.Pop();
-                Debug.Assert(check == this, "Thread stack is broken.");
-                return value;
+                try
+                {
+                    _rwl.AcquireWriterLock(TimeSpan.FromSeconds(1));
+                    try
+                    {
+                        var targets = ThreadStack.Instance;
+                        targets.Push(this);
+                        value = _read();
+                        var check = targets.Pop();
+                        Debug.Assert(check == this, "Thread stack is broken.");
+                        done = true;
+                    }
+                    finally
+                    {
+                        _rwl.ReleaseWriterLock();
+                    }
+                }
+                catch (ApplicationException)
+                {
+                    done = false;
+                }
             }
+
+            return value;
+
         }
 
         private void Invalidate()
@@ -82,6 +125,6 @@ namespace Developer.Test
         private readonly IDictionary<IDependencySource, IDisposable> _dependency = new ConcurrentDictionary<IDependencySource, IDisposable>();
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private readonly object _protection = new object();
+        private readonly ReaderWriterLock _rwl = new ReaderWriterLock();
     }
 }
