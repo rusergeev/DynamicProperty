@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CalculatedProperty.cs" />
     <Compile Include="BasicProperty.cs" />
+    <Compile Include="DependencyTargetProperty.cs" />
     <Compile Include="Wrapper.cs" />
     <Compile Include="Obsolete\_CalcProperty.cs" />
     <Compile Include="DependencySourceProperty.cs" />
