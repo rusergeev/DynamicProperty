@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Developer.Test
 {
-    class DependencyTargetProperty<T> : DependencySourceProperty<T>, IDependencyTarget
+    class DependencyTargetProperty<T> : DependencySourceProperty<T>, IDependencyTarget, IValidDynamicProperty<T>
     {
         public DependencyTargetProperty(Func<T> read, Action<T> write) : base(read, write)
         {
@@ -23,11 +23,12 @@ namespace Developer.Test
                 ClearDependency();
 
                 var targets = ThreadStack.Instance.Current;
-
                 targets.Push(this);
                 var value = base.Value;
                 var check = targets.Pop();
                 Debug.Assert(check == this, "Thread stack is broken.");
+
+                Valid = true;
 
                 return value;
             }
@@ -51,9 +52,11 @@ namespace Developer.Test
         private void Update()
         {
             Valid = false;
+            var property = _value as BasicProperty<T>;
+            Debug.Assert(property != null, "Cast must be right from IDependencyTarget to BasicProperty");
+            property.Notify(property.Value);
         }
 
         private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
-
     }
 }

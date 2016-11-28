@@ -21,19 +21,20 @@ namespace Developer.Test
             }
         }
 
-        private void Notify(T value)
-        {
-            foreach (var callback in _callbacks.Values)
-            {
-                callback(value);
-            }
-        }
 
         public IDisposable Subscribe(Action<T> callback)
         {
             var subscription = new Subscription(Unsubscribe);
             _callbacks[subscription] = callback;
             return subscription;
+        }
+
+        public void Notify(T value)
+        {
+            foreach (var callback in _callbacks.Values)
+            {
+                callback(value);
+            }
         }
 
         private void Unsubscribe(IDisposable subscription)

@@ -15,27 +15,32 @@ namespace Developer.Test
             _value = new CalculatedProperty<T>(read, write);
         }
 
-        public T Value
+        public virtual T Value
         {
             get
             {
-                var targets = ThreadStack.Instance.Current;
-                if (targets.Any())
-                {
-                    targets.Peek().SubscribeTo(this);
-                }
+                RegisterDependency();
                 return _value.Value;
             }
             set { _value.Value = value; }
         }
 
-        public bool Valid { get; protected set; }
+        public virtual bool Valid { get; protected set; } = false;
+
+        private void RegisterDependency()
+        {
+            var targets = ThreadStack.Instance.Current;
+            if (targets.Any())
+            {
+                targets.Peek().SubscribeTo(this);
+            }
+        }
 
         public IDisposable Subscribe(Action<T> callback)
         {
             return _value.Subscribe(callback);
         }
 
-        private readonly IDynamicProperty<T> _value;
+        protected readonly IDynamicProperty<T> _value;
     }
 }
