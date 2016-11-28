@@ -5,9 +5,11 @@ namespace Developer.Test
 {
     class DependencyTargetProperty<T> : Wrapper<T>, IDependencyTarget
     {
-        public DependencyTargetProperty(Func<T> read, Action<T> write) : base(new DependencySourceProperty<T>(read, write))
+        public DependencyTargetProperty(Func<T> read, Action<T> write)
+            : base(new DependencySourceProperty<T>(read, write))
         {
         }
+
         public override T Value
         {
             get
@@ -27,6 +29,5 @@ namespace Developer.Test
         {
             source.Subscribe(value => { });
         }
-
     }
 }

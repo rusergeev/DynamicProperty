@@ -12,11 +12,25 @@ namespace Developer.Test
 
         public override T Value
         {
-            get { return _read(); }
+            get
+            {
+                if (!_valid)
+                {
+                    _value.Value = _read();
+                    _valid = true;
+                }
+                return _value.Value;
+            }
             set { _write(value); }
+        }
+
+        public override bool Valid
+        {
+            get { return _valid; }
         }
 
         private readonly Func<T> _read;
         private readonly Action<T> _write;
+        private bool _valid = true;
     }
 }

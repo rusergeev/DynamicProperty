@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 namespace Developer.Test
 {
-    class SubscribableProperty<T>: IDynamicProperty<T>
+    class SubscribableProperty<T> : IValidDynamicProperty<T>
     {
         public SubscribableProperty(T initialValue)
         {
             _value = initialValue;
         }
 
-        public T Value {
+        public T Value
+        {
             get { return _value; }
             set
             {
@@ -21,6 +22,11 @@ namespace Developer.Test
                     callback(value);
                 }
             }
+        }
+
+        public virtual bool Valid
+        {
+            get { return true; }
         }
 
         public IDisposable Subscribe(Action<T> callback)
@@ -36,6 +42,8 @@ namespace Developer.Test
         }
 
         private T _value;
-        private readonly IDictionary<IDisposable, Action<T>> _callbacks = new ConcurrentDictionary<IDisposable, Action<T>>();
+
+        private readonly IDictionary<IDisposable, Action<T>> _callbacks =
+            new ConcurrentDictionary<IDisposable, Action<T>>();
     }
 }
