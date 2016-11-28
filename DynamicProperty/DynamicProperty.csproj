@@ -47,7 +47,7 @@
     <Compile Include="DependencySourceProperty.cs" />
     <Compile Include="DynamicProperty.cs" />
     <Compile Include="Obsolete\_DynProperty.cs" />
-    <Compile Include="Obsolete\_IClient.cs" />
+    <Compile Include="IDependencyTarget.cs" />
     <Compile Include="Obsolete\_IValue.cs" />
     <Compile Include="Obsolete\_AsyncSetProperty.cs" />
     <Compile Include="IDynamicProperty{T}.cs" />

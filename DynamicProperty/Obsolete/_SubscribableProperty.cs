@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Developer.Test
 {
-    class _SubscribableProperty<T>: IDynamicProperty<T>, _IClient, IDisposable
+    class _SubscribableProperty<T>: IDynamicProperty<T>, IDependencyTarget, IDisposable
     {
         public _SubscribableProperty(Func<T> read, Action<T> write)
         {
@@ -90,6 +90,11 @@ namespace Developer.Test
         public void Dispose()
         {
             ReleaseLinks();
+        }
+
+        public void SubscribeTo<T1>(DependencySourceProperty<T1> source)
+        {
+            throw new NotImplementedException();
         }
     }
 }
