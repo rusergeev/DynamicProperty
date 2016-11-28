@@ -2,6 +2,6 @@
 {
     interface IDependencyTarget
     {
-        void SubscribeTo<T>(DependencySourceProperty<T> source);
+        void SubscribeTo<T>(BasicProperty<T> source);
     }
 }

@@ -6,7 +6,7 @@ namespace Developer.Test
     {
         public _DynProperty(T initialValue)
         {
-            _value = new BasicProperty<T>(initialValue);
+            _value = new SubscribableProperty<T>(initialValue);
         }
 
         public T Value

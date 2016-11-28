@@ -10,7 +10,7 @@ namespace Developer.Test
         {
             _read = read;
             _write = write;
-            _cache = new BasicProperty<T>(_read());
+            _cache = new SubscribableProperty<T>(_read());
         }
 
         public T Value

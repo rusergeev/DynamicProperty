@@ -1,32 +1,65 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Developer.Test
 {
-    class CalculatedProperty<T> : BasicProperty<T>, IValidDynamicProperty<T>
+    class CalculatedProperty<T> : ReadWriteProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
-        public CalculatedProperty(Func<T> read, Action<T> write) : base(read())
+        public CalculatedProperty(Func<T> read, Action<T> write) : base(read, write)
         {
-            _read = read;
-            _write = write;
         }
 
         public new T Value
         {
             get
             {
-                if (!Valid)
+                if (Valid)
                 {
-                    base.Value = _read();
-                    Valid = true;
+                    return base.Value;
                 }
-                return base.Value;
+
+                ClearDependency();
+
+                var targets = ThreadStack.Instance.Current;
+                targets.Push(this);
+                var value = base.Value;
+                var check = targets.Pop();
+                Debug.Assert(check == this, "Thread stack is broken.");
+
+                Valid = true;
+
+                return value;
             }
-            set { _write(value); }
+            set { base.Value = value; }
         }
 
-        public bool Valid { get; private set; } = true;
+        private void ClearDependency()
+        {
+            foreach (var subscription in _dependency.Values)
+            {
+                subscription.Dispose();
+            }
+            _dependency.Clear();
+        }
 
-        private readonly Func<T> _read;
-        private readonly Action<T> _write;
+        public void SubscribeTo<TSource>(BasicProperty<TSource> source)
+        {
+            _dependency[source] = source.Subscribe(value => Update());
+        }
+
+        private void Update()
+        {
+            Valid = false;
+            var property = this as SubscribableProperty<T>;
+            Debug.Assert(property != null, "Cast must be right from this to SubscribableProperty");
+
+            //todo: fix notification
+            property.Notify(property.Value);
+        }
+
+        private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
+
     }
 }

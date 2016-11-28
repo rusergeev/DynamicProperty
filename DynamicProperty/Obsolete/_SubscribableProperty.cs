@@ -92,7 +92,7 @@ namespace Developer.Test
             ReleaseLinks();
         }
 
-        public void SubscribeTo<T1>(DependencySourceProperty<T1> source)
+        public void SubscribeTo<T1>(BasicProperty<T1> source)
         {
             throw new NotImplementedException();
         }
