@@ -5,8 +5,17 @@ using System.Diagnostics;
 
 namespace Developer.Test
 {
+    /// <summary>
+    /// calculated dynamic property
+    /// </summary>
+    /// <typeparam name="T"> property value type </typeparam>
     sealed class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="read"> Called to calculate the value of the property. </param>
+        /// <param name="write"> Called whenever the <see cref="IDynamicProperty{T}.Value"/> property setter of this is invoked. </param>
         public CalculatedProperty(Func<T> read, Action<T> write)
         {
             _read = read;
@@ -14,7 +23,9 @@ namespace Developer.Test
 
             base.Init(EvaluatingRead());
         }
-
+        /// <summary>
+        /// Gets or sets the value of the property.
+        /// </summary>
         public new T Value
         {
             get
@@ -23,7 +34,10 @@ namespace Developer.Test
             }
             set { _write(value); }
         }
-
+        /// <summary>
+        /// to subscribe to dependency source
+        /// </summary>
+        /// <param name="source"> a dependency source - <see cref="BasicProperty{T}"/></param>
         public void SubscribeTo(IDependencySource source)
         {
             if(!_dependency.ContainsKey(source))
