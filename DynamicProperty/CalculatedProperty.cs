@@ -5,10 +5,12 @@ using System.Diagnostics;
 
 namespace Developer.Test
 {
-    class CalculatedProperty<T> : ReadWriteProperty<T>, IDependencyTarget, IDynamicProperty<T>
+    class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
-        public CalculatedProperty(Func<T> read, Action<T> write) : base(read, write)
+        public CalculatedProperty(Func<T> read, Action<T> write) : base(read())
         {
+            _read = read;
+            _write = write;
         }
 
         public new T Value
@@ -24,7 +26,7 @@ namespace Developer.Test
 
                 var targets = ThreadStack.Instance.Current;
                 targets.Push(this);
-                var value = base.Value;
+                var value = _read();
                 var check = targets.Pop();
                 Debug.Assert(check == this, "Thread stack is broken.");
 
@@ -58,5 +60,8 @@ namespace Developer.Test
         }
 
         private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
+        private readonly Func<T> _read;
+        private readonly Action<T> _write;
+        private bool Valid { get; set; } = true;
     }
 }
