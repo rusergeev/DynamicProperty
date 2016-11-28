@@ -2,6 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Developer.Test
 {
@@ -21,9 +24,7 @@ namespace Developer.Test
             {
                 if (!_valid)
                 {
-                    ClearDependency();
-                    base.Value = EvaluatingRead();
-                    _valid = true;
+                    RestoreValidReadCache();
                 }
 
                 return base.Value;
@@ -31,14 +32,10 @@ namespace Developer.Test
             set { _write(value); }
         }
 
-        private T EvaluatingRead()
+        public void SubscribeTo(IDependencySource source)
         {
-            var targets = ThreadStack.Instance;
-            targets.Push(this);
-            var value = _read();
-            var check = targets.Pop();
-            Debug.Assert(check == this, "Thread stack is broken.");
-            return value;
+            if(!_dependency.ContainsKey(source))
+                _dependency[source] = source.Subscribe(Invalidate);
         }
 
         private void ClearDependency()
@@ -50,22 +47,47 @@ namespace Developer.Test
             _dependency.Clear();
         }
 
-        public void SubscribeTo(IDependencySource source)
+        private void RestoreValidReadCache()
         {
-            _dependency[source] = source.Subscribe(Invalidate);
+                ClearDependency();
+                base.Value = EvaluatingRead();
+                _valid = true;
+        }
+
+        private T EvaluatingRead()
+        {
+            lock (_protection)
+            {
+                var targets = ThreadStack.Instance;
+                targets.Push(this);
+                var value = _read();
+                var check = targets.Pop();
+                Debug.Assert(check == this, "Thread stack is broken.");
+                return value;
+            }
         }
 
         private void Invalidate()
         {
             _valid = false;
             var source = this as IDependencySource;
-            Debug.Assert(source != null, "Cast must be right from this to IDependencySource");
-            source.NotifyAllTargets();
+            _taskQueue.Enqueue( Task.Run(() => source.NotifyAllTargets()));
+            _taskQueue.Enqueue( Task.Run(() => RestoreValidReadCache()));
+            while (_taskQueue.Any())
+            {
+                Task first;
+                if (_taskQueue.TryDequeue(out first))
+                {
+                    first.Wait();
+                }
+            }
         }
 
-        private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
+        private readonly IDictionary<IDependencySource, IDisposable> _dependency = new ConcurrentDictionary<IDependencySource, IDisposable>();
         private readonly Func<T> _read;
         private readonly Action<T> _write;
         private bool _valid = true;
+        private readonly object _protection = new object();
+        private readonly ConcurrentQueue<Task> _taskQueue = new ConcurrentQueue<Task>();
     }
 }
