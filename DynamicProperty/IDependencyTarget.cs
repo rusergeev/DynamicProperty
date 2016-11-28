@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Developer.Test
+﻿namespace Developer.Test
 {
     interface IDependencyTarget
     {
