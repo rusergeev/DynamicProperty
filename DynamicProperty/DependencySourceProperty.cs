@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Developer.Test
 {
-    class DependencySourceProperty<T> : Wrapper<T>
+    class DependencySourceProperty<T> : ResponcibilityChain<T>
     {
         public DependencySourceProperty(T initialValue) :  base(new BasicProperty<T>(initialValue) )
         {

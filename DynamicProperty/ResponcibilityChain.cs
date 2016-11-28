@@ -2,9 +2,9 @@
 
 namespace Developer.Test
 {
-    class Wrapper<T> : IValidDynamicProperty<T>
+    class ResponcibilityChain<T> : IValidDynamicProperty<T>
     {
-        protected Wrapper(IValidDynamicProperty<T> value)
+        protected ResponcibilityChain(IValidDynamicProperty<T> value)
         {
             _value = value;
         }

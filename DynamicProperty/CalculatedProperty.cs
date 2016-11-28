@@ -2,7 +2,7 @@
 
 namespace Developer.Test
 {
-    class CalculatedProperty<T> : Wrapper<T>
+    class CalculatedProperty<T> : ResponcibilityChain<T>
     {
         public CalculatedProperty(Func<T> read, Action<T> write) : base(new SubscribableProperty<T>(read()))
         {
