@@ -18,7 +18,7 @@ namespace Developer.Test
             _value = initialValue;
         }
 
-        public virtual T Value
+        public T Value
         {
             get { return _value; }
             set

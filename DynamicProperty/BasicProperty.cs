@@ -19,7 +19,7 @@ namespace Developer.Test
             base.Init(initialValue);
         }
 
-        public new virtual T Value
+        public new T Value
         {
             get
             {
