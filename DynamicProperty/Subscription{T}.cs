@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Developer.Test
 {
-    class Subscription<T>: IEnumerable<T>
+    sealed class Subscription<T>: IEnumerable<T>
     {
         public IDisposable Create(T callback)
         {

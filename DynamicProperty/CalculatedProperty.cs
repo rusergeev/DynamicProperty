@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Developer.Test
 {
-    class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
+    sealed class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
         public CalculatedProperty(Func<T> read, Action<T> write)
         {
