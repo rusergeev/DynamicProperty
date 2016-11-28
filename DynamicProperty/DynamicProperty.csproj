@@ -42,13 +42,9 @@
   <ItemGroup>
     <Compile Include="IDependencySource.cs" />
     <Compile Include="CalculatedProperty.cs" />
-    <Compile Include="Obsolete\_CalcProperty.cs" />
     <Compile Include="BasicProperty.cs" />
     <Compile Include="DynamicProperty.cs" />
-    <Compile Include="Obsolete\_DynProperty.cs" />
     <Compile Include="IDependencyTarget.cs" />
-    <Compile Include="Obsolete\_IValue.cs" />
-    <Compile Include="Obsolete\_AsyncSetProperty.cs" />
     <Compile Include="IDynamicProperty{T}.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subscription{T}.cs" />
