@@ -21,10 +21,14 @@ namespace Developer.Test
         {
             get
             {
-                RegisterDependency();
+                RegisterTargetForEvaluation();
                 return base.Value;
             }
-            set { base.Value = value; }
+            set
+            {
+                base.Value = value;
+                NotifyAllTargets();
+            }
         }
 
         public IDisposable Subscribe(Action notify)
@@ -40,7 +44,7 @@ namespace Developer.Test
             }
         }
 
-        private void RegisterDependency()
+        private void RegisterTargetForEvaluation()
         {
             var targets = ThreadStack.Instance;
             if (targets.Any())

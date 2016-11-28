@@ -19,18 +19,16 @@ namespace Developer.Test
         {
             get
             {
-                if (_valid)
+                if (!_valid)
                 {
-                    return base.Value;
+                    ClearDependency();
+                    base.Value = EvaluatingRead();
+                    _valid = true;
                 }
 
-                ClearDependency();
-                var value = EvaluatingRead();
-                _valid = true;
-
-                return value;
+                return base.Value;
             }
-            set { base.Value = value; }
+            set { _write(value); }
         }
 
         private T EvaluatingRead()
