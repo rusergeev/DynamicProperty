@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Developer.Test
@@ -22,11 +21,6 @@ namespace Developer.Test
         {
             get
             {
-                if (!_valid)
-                {
-                    RestoreValidReadCache();
-                }
-
                 return base.Value;
             }
             set { _write(value); }
@@ -51,7 +45,6 @@ namespace Developer.Test
         {
                 ClearDependency();
                 base.Value = EvaluatingRead();
-                _valid = true;
         }
 
         private T EvaluatingRead()
@@ -69,25 +62,14 @@ namespace Developer.Test
 
         private void Invalidate()
         {
-            _valid = false;
             var source = this as IDependencySource;
-            _taskQueue.Enqueue( Task.Run(() => source.NotifyAllTargets()));
-            _taskQueue.Enqueue( Task.Run(() => RestoreValidReadCache()));
-            while (_taskQueue.Any())
-            {
-                Task first;
-                if (_taskQueue.TryDequeue(out first))
-                {
-                    first.Wait();
-                }
-            }
+            source.NotifyAllTargets();
+            RestoreValidReadCache();
         }
 
         private readonly IDictionary<IDependencySource, IDisposable> _dependency = new ConcurrentDictionary<IDependencySource, IDisposable>();
         private readonly Func<T> _read;
         private readonly Action<T> _write;
-        private bool _valid = true;
         private readonly object _protection = new object();
-        private readonly ConcurrentQueue<Task> _taskQueue = new ConcurrentQueue<Task>();
     }
 }

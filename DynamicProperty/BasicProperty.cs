@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Developer.Test
 {
@@ -38,9 +40,9 @@ namespace Developer.Test
 
         public void NotifyAllTargets()
         {
-            foreach (var notify in _dependencies)
+            foreach (var notify in _dependencies.AsParallel())
             {
-                notify();
+                Task.Run(notify).Wait();
             }
         }
 
