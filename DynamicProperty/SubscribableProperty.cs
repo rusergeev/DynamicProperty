@@ -23,27 +23,18 @@ namespace Developer.Test
 
         public IDisposable Subscribe(Action<T> callback)
         {
-            var subscription = new Subscription(Unsubscribe);
-            _callbacks[subscription] = callback;
-            return subscription;
+            return subscriptions.Create(callback);
         }
 
         public void Notify(T value)
         {
-            foreach (var callback in _callbacks.Values)
+            foreach (var callback in subscriptions.All())
             {
                 callback(value);
             }
         }
 
-        private void Unsubscribe(IDisposable subscription)
-        {
-            _callbacks.Remove(subscription);
-        }
-
         private T _value;
-
-        private readonly IDictionary<IDisposable, Action<T>> _callbacks =
-            new ConcurrentDictionary<IDisposable, Action<T>>();
+        private readonly Subscription<Action<T>> subscriptions = new Subscription<Action<T>>();
     }
 }

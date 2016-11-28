@@ -44,22 +44,19 @@ namespace Developer.Test
             _dependency.Clear();
         }
 
-        public void SubscribeTo<TSource>(BasicProperty<TSource> source)
+        public void SubscribeTo(IDependencySource source)
         {
-            _dependency[source] = source.Subscribe(value => Update());
+            _dependency[source] = source.Subscribe(Invalidate);
         }
 
-        private void Update()
+        private void Invalidate()
         {
             Valid = false;
-            var property = this as SubscribableProperty<T>;
-            Debug.Assert(property != null, "Cast must be right from this to SubscribableProperty");
-
-            //todo: fix notification
-            property.Notify(property.Value);
+            var source = this as IDependencySource;
+            Debug.Assert(source != null, "Cast must be right from this to IDependencySource");
+            source.NotifyAllTargets();
         }
 
         private readonly IDictionary<object, IDisposable> _dependency = new ConcurrentDictionary<object, IDisposable>();
-
     }
 }

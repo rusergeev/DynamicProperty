@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Developer.Test
 {
-    class BasicProperty<T> : SubscribableProperty<T>, IDynamicProperty<T>
+    class BasicProperty<T> : SubscribableProperty<T>, IDynamicProperty<T>, IDependencySource
     {
-        public BasicProperty(T initialValue):base(initialValue)
+        public BasicProperty(T initialValue) : base(initialValue)
         {
         }
 
@@ -19,6 +21,19 @@ namespace Developer.Test
             set { base.Value = value; }
         }
 
+        public IDisposable Subscribe(Action notify)
+        {
+            return dependencies.Create(notify);
+        }
+
+        public void NotifyAllTargets()
+        {
+            foreach (var notify in dependencies.All())
+            {
+                notify();
+            }
+        }
+
         private void RegisterDependency()
         {
             var targets = ThreadStack.Instance.Current;
@@ -27,5 +42,9 @@ namespace Developer.Test
                 targets.Peek().SubscribeTo(this);
             }
         }
+
+        private readonly Subscription<Action> dependencies = new Subscription<Action>();
     }
+
+
 }
