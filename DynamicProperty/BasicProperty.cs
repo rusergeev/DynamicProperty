@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     ///  Creates an <see cref="IDynamicProperty{T}"/> instance

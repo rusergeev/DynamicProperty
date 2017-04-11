@@ -1,7 +1,7 @@
-﻿namespace Developer.Test
-{
-    using System;
+﻿using System;
 
+namespace DynamicProperty
+{
     /// <summary>
     /// Represents a property that can be observed or updated.
     /// </summary>

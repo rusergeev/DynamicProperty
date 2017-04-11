@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     /// ependency source - <see cref="BasicProperty{T}"/>

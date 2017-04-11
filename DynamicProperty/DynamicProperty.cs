@@ -1,7 +1,7 @@
-﻿namespace Developer.Test
-{
-    using System;
+﻿using System;
 
+namespace DynamicProperty
+{
     /// <summary>
     /// Static factory methods to create <see cref="IDynamicProperty{T}"/> instances.
     /// </summary>

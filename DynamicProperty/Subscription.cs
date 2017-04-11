@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     /// disposable Subscription object

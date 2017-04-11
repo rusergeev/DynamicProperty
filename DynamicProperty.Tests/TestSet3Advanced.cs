@@ -1,12 +1,11 @@
 ﻿
-namespace Developer.Test
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using NUnit.Framework;
+
+namespace DynamicProperty.Tests
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using NUnit.Framework;
-
     /// <summary>
     /// Advanced difficulty tests.
     /// These test whether the dynamic properties are thread-safe and can be used concurrently by multiple threads.

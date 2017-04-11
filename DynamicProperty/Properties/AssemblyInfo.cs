@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DynamicProperty")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Schlumberger")]
+[assembly: AssemblyCompany("Dmitry Sergeev")]
 [assembly: AssemblyProduct("DynamicProperty")]
-[assembly: AssemblyCopyright("Copyright © Schlumberger 2016")]
+[assembly: AssemblyCopyright("Copyright © Dmitry Sergeev 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

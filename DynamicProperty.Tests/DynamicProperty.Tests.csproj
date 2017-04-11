@@ -6,7 +6,7 @@
     <ProjectGuid>{DEC6F8CF-C708-4D38-8746-5AB913FFC3C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Developer.Test</RootNamespace>
+    <RootNamespace>DynamicProperty.Tests</RootNamespace>
     <AssemblyName>DynamicProperty.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

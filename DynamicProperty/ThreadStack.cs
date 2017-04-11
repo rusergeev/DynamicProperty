@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     /// builds stacks for a current thread, can work with several threads

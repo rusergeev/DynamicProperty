@@ -1,12 +1,11 @@
 ﻿
-namespace Developer.Test
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using NUnit.Framework;
+
+namespace DynamicProperty.Tests
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using NUnit.Framework;
-
     /// <summary>
     /// Intermediate difficulty tests.
     /// The first test is a single-threaded test that just ensures the read function is not called needlessly

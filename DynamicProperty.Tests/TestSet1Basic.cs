@@ -1,11 +1,11 @@
 ﻿
-namespace Developer.Test
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using NUnit.Framework;
 
+namespace DynamicProperty.Tests
+{
     /// <summary>
     /// Tests the minimum required features for this coding quiz
     /// Tests that your dynamic properties function correctly in a single-threaded application.

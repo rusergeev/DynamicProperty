@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     /// root base class for all properties

@@ -1,4 +1,4 @@
-﻿namespace Developer.Test
+﻿namespace DynamicProperty
 {
     /// <summary>
     /// Dependency consumer -  <see cref="CalculatedProperty{T}"/>

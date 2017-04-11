@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Developer.Test
+namespace DynamicProperty
 {
     /// <summary>
     /// calculated dynamic property
