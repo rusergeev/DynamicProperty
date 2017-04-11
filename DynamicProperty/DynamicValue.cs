@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-namespace Developer.Test
+
+namespace DynamicProperty
 {
 	internal interface IDependent : IDependency
 	{
@@ -52,7 +53,7 @@ namespace Developer.Test
 #endif
 			_stack.Pop();
 #if DEBUG
-			// if (!top.Equals(property))
+			//if (!top.Equals(property))
 			//	throw new InvalidOperationException("Transaction Stack broken!!!");
 #endif
 			if (!_stack.Any())
@@ -67,7 +68,7 @@ namespace Developer.Test
 		private Stack<IDependent> _stack = new Stack<IDependent>();
 		private readonly Mutex _access = new Mutex(initiallyOwned: true);
 #if DEBUG
-		IDependent property;
+	    private IDependent property;
 #endif
 	}
 	public class DynamicValue<T> : BasicValue<T>, IDependent {
@@ -110,7 +111,7 @@ namespace Developer.Test
 		private readonly Func<T> _read;
 		private readonly Action<T> _write;
 		private bool _valid;
-		private HashSet<IDependency> _dependencies = new HashSet<IDependency>();
+		private readonly HashSet<IDependency> _dependencies = new HashSet<IDependency>();
 	}
 	public class BasicValue<T> : IDynamicProperty<T>, IDependency
 	{
@@ -118,8 +119,8 @@ namespace Developer.Test
 			_value = initialValue;
 		}
 		T IDynamicProperty<T>.Value{
-			get => Get(); 
-			set {
+		    get { return Get(); }
+		    set {
 				Set(value);
 				InvalidateDependants();
 			}
@@ -157,7 +158,7 @@ namespace Developer.Test
 				callback(value);
 		}
 		private T _value;
-		private HashSet<IDependent> _dependables = new HashSet<IDependent>();
+		private readonly HashSet<IDependent> _dependables = new HashSet<IDependent>();
 		private readonly Subscription<Action<T>> _subscriptions = new Subscription<Action<T>>();
 	}
 }

@@ -15,7 +15,7 @@ namespace DynamicProperty
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(T initialValue)
         {
-            return new BasicProperty<T>(initialValue);
+            return new BasicValue<T>(initialValue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace DynamicProperty
         /// <returns></returns>
         public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write)
         {
-            return new CalculatedProperty<T>(read, write);
+            return new DynamicValue<T>(read, write);
         }
     }
 }
