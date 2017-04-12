@@ -10,44 +10,38 @@ namespace DynamicProperty {
 			_write = write;
 		    Evaluate();
 		}
-
         protected override void Set(T value) {
 			_write(value);
 		}
-        void IDependent.DependsOn(IDependency dependency)
-        {
+        void IDependent.DependsOn(IDependency dependency) {
             if (dependency == this)
                 throw new InvalidOperationException("Don't depend on itself!!!");
             _dependencies.Add(dependency);
             dependency.Support(this);
         }
-        void IDependent.DoesNotDependOn(IDependency dependency)
-        {
+        void IDependent.DoesNotDependOn(IDependency dependency) {
             if (dependency == this)
                 throw new InvalidOperationException("Don't depend on itself!!!");
             _dependencies.Remove(dependency);
             dependency.DoesNotSupport(this);
         }
-        void IDependent.Recalculate()
-        {
+        void IDependent.Recalculate() {
             ClearDepedencies();
             Evaluate();
         }
-        private void ClearDepedencies()
-        {
+        private void ClearDepedencies() {
             var dependencies = _dependencies.ToList();
             _dependencies.Clear();
             foreach (var dependency in dependencies)
-            {
                 dependency.DoesNotSupport(this);
-            }
         }
-        private void Evaluate()
-        {
-            T value;
-            using (Transaction.Instance(this))
-            { value =  _read(); }
+        private void Evaluate() {
+            var value = ReadTransaction();
             base.Set(value);
+        }
+        private T ReadTransaction() {
+            using (Transaction.Instance(this))
+            { return _read(); }
         }
         private readonly Func<T> _read;
         private readonly Action<T> _write;
