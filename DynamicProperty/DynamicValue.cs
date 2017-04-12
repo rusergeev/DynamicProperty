@@ -1,33 +1,56 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DynamicProperty {
-    class DynamicValue<T> : BasicValue<T> {
+    class DynamicValue<T> : BasicValue<T>, IDependent
+    {
 		public DynamicValue(Func<T> read, Action<T> write) {
 			_read = read;
 			_write = write;
-		    using (Transaction.Instance(this))
-		    { base.Set(_read()); }
-        }
-		//protected override T Get() {
-		//	if (!Valid)
-		//		Evaluate();
-		//	return base.Get();
-		//}
-		protected override void Set(T value) {
-			_write(value);
-		}
-		private void Evaluate() {
-            CutDependency();
-		    T result;
-		    using (Transaction.Instance(this))
-            { result = _read(); }
-            base.Set(result);
+		    Evaluate();
 		}
 
-        protected override void Eval(){
+        protected override void Set(T value) {
+			_write(value);
+		}
+        void IDependent.DependsOn(IDependency dependency)
+        {
+            if (dependency == this)
+                throw new InvalidOperationException("Don't depend on itself!!!");
+            _dependencies.Add(dependency);
+            dependency.Support(this);
+        }
+        void IDependent.DoesNotDependOn(IDependency dependency)
+        {
+            if (dependency == this)
+                throw new InvalidOperationException("Don't depend on itself!!!");
+            _dependencies.Remove(dependency);
+            dependency.DoesNotSupport(this);
+        }
+        void IDependent.Recalculate()
+        {
+            ClearDepedencies();
             Evaluate();
         }
-		private readonly Func<T> _read;
-		private readonly Action<T> _write;
-	}
+        private void ClearDepedencies()
+        {
+            var dependencies = _dependencies.ToList();
+            _dependencies.Clear();
+            foreach (var dependency in dependencies)
+            {
+                dependency.DoesNotSupport(this);
+            }
+        }
+        private void Evaluate()
+        {
+            T value;
+            using (Transaction.Instance(this))
+            { value =  _read(); }
+            base.Set(value);
+        }
+        private readonly Func<T> _read;
+        private readonly Action<T> _write;
+        private readonly ICollection<IDependency> _dependencies = new HashSet<IDependency>();
+    }
 }
