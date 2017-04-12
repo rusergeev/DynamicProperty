@@ -36,10 +36,10 @@ namespace DynamicProperty {
                 dependency.DoesNotSupport(this);
         }
         private void Evaluate() {
-            var value = ReadTransaction();
+            var value = TransactionRead();
             base.Set(value);
         }
-        private T ReadTransaction() {
+        private T TransactionRead() {
             using (Transaction.Instance(this))
             { return _read(); }
         }

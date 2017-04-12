@@ -11,10 +11,10 @@ namespace DynamicProperty
             _value = initialValue;
         }
         T IDynamicProperty<T>.Value {
-            get { return GetTransaction(); }
+            get { return TransactionGet(); }
             set { Set(value); }
         }
-        private T GetTransaction() {
+        private T TransactionGet() {
             using (Transaction.Instance(this))
             { return _value; }
         }
