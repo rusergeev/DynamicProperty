@@ -14,6 +14,7 @@ namespace DynamicProperty {
         public void CutDependency() {
             foreach (var from in _from)
                 from._to.Remove(this);
+            _from.Clear();
         }
         public void Invalidate() {
             foreach (var to in _to.ToList())
