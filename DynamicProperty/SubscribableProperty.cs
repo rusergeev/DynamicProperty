@@ -10,6 +10,7 @@ namespace DynamicProperty
     /// owns a property value
     /// </summary>
     /// <typeparam name="T"> property value type </typeparam>
+    [Obsolete]
     class SubscribableProperty<T> : IDynamicProperty<T>
     {
         /// <summary>

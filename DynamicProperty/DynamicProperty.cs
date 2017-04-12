@@ -5,19 +5,16 @@ namespace DynamicProperty
     /// <summary>
     /// Static factory methods to create <see cref="IDynamicProperty{T}"/> instances.
     /// </summary>
-    public static class DynamicProperty
-    {
+    public static class DynamicProperty {
         /// <summary>
         /// Creates an <see cref="IDynamicProperty{T}"/> instance with <paramref name="initialValue"/>
         /// </summary>
         /// <typeparam name="T">The data type</typeparam>
         /// <param name="initialValue">The initial value of the property</param>
         /// <returns></returns>
-        public static IDynamicProperty<T> Create<T>(T initialValue)
-        {
+        public static IDynamicProperty<T> Create<T>(T initialValue) {
             return new BasicValue<T>(initialValue);
         }
-
         /// <summary>
         /// Creates a <see cref="IDynamicProperty{T}"/> instance whose Value property is determined by running a function.
         /// We call this a <c>CalculatedDynamicProperty</c>.
@@ -39,8 +36,7 @@ namespace DynamicProperty
         /// can do anything it wants with the written value.
         /// </param>
         /// <returns></returns>
-        public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write)
-        {
+        public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write) {
             return new DynamicValue<T>(read, write);
         }
     }

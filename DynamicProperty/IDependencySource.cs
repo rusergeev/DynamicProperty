@@ -3,8 +3,9 @@
 namespace DynamicProperty
 {
     /// <summary>
-    /// ependency source - <see cref="BasicProperty{T}"/>
+    /// dependency source - <see cref="BasicProperty{T}"/>
     /// </summary>
+    [Obsolete]
     interface IDependencySource
     {
         /// <summary>

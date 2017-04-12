@@ -10,6 +10,7 @@ namespace DynamicProperty
     /// calculated dynamic property
     /// </summary>
     /// <typeparam name="T"> property value type </typeparam>
+    [Obsolete]
     sealed class CalculatedProperty<T> : BasicProperty<T>, IDependencyTarget, IDynamicProperty<T>
     {
         /// <summary>

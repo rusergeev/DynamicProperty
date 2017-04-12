@@ -1,8 +1,11 @@
-﻿namespace DynamicProperty
+﻿using System;
+
+namespace DynamicProperty
 {
     /// <summary>
     /// Dependency consumer -  <see cref="CalculatedProperty{T}"/>
     /// </summary>
+    [Obsolete]
     interface IDependencyTarget
     {
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ namespace DynamicProperty
     /// <summary>
     /// builds stacks for a current thread, can work with several threads
     /// </summary>
+    [Obsolete]
     sealed class ThreadStack
     {
         private ThreadStack()

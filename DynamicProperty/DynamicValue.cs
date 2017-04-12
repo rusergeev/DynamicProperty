@@ -3,13 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace DynamicProperty {
-    class DynamicValue<T> : BasicValue<T>, IDependent
-    {
-		public DynamicValue(Func<T> read, Action<T> write) {
+    /// <summary>
+    /// calculated dynamic property
+    /// </summary>
+    /// <typeparam name="T"> property value type </typeparam>
+    sealed class DynamicValue<T> : BasicValue<T>, IDependent {
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="read"> Called to calculate the value of the property. </param>
+        /// <param name="write"> Called whenever the <see cref="IDynamicProperty{T}.Value"/> property setter of this is invoked. </param>
+        public DynamicValue(Func<T> read, Action<T> write) {
 			_read = read;
 			_write = write;
 		    Evaluate();
 		}
+        /// <summary>
+        /// Writes the value through Value interface
+        /// </summary>
+        /// <param name="value"></param>
         protected override void Set(T value) {
 			_write(value);
 		}

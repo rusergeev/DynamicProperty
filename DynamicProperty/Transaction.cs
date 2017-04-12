@@ -5,7 +5,15 @@ using System.Threading;
 
 namespace DynamicProperty
 {
+    /// <summary>
+    /// builds stacks for a current thread, can work with several threads
+    /// </summary>
     class Transaction : IDisposable {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dependency"> A Dynamic Property, which evaluates its dependencies </param>
+        /// <returns> a disposable transaction </returns>
         public static IDisposable Instance(IDependency dependency) {
             var id = Thread.CurrentThread.ManagedThreadId;
             if (!_map.ContainsKey(id))
@@ -13,6 +21,10 @@ namespace DynamicProperty
             _map[id].CheckIn(dependency);
             return _map[id];
         }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing resources:
+        /// In the Transaction class, checks out a dependency from stack
+        /// </summary>
         public void Dispose() {
             CheckOut();
         }

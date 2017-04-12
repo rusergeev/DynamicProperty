@@ -8,6 +8,7 @@ namespace DynamicProperty
     ///  Creates an <see cref="IDynamicProperty{T}"/> instance
     /// </summary>
     /// <typeparam name="T"> property value type </typeparam>
+    [Obsolete]
     class BasicProperty<T> : SubscribableProperty<T>, IDynamicProperty<T>, IDependencySource
     {
         /// <summary>
