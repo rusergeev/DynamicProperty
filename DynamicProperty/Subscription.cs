@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 namespace DynamicProperty {
     /// <summary>
     /// disposable Subscription object
@@ -8,7 +9,7 @@ namespace DynamicProperty {
         /// constructor
         /// </summary>
         /// <param name="unsubscribe"> action to call on dispose </param>
-        public Subscription(Action<Subscription> unsubscribe) {
+        public Subscription([NotNull] Action<Subscription> unsubscribe) {
             _unsubscribe = unsubscribe;
         }
         /// <summary>

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+
 namespace DynamicProperty {
     class BasicValue<T> : IDynamicProperty<T>, IDependency {
         protected BasicValue() { }
@@ -62,6 +64,7 @@ namespace DynamicProperty {
         }
         private T _value;
         private readonly Subscription<Action<T>> _subscriptions = new Subscription<Action<T>>();
+        [ItemNotNull]
         private readonly ICollection<IDependent> _dependents = new HashSet<IDependent>();
     }
 }

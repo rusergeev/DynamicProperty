@@ -1,4 +1,6 @@
 ﻿using System;
+using JetBrains.Annotations;
+
 namespace DynamicProperty {
     /// <summary>
     /// Represents a property that can be observed or updated.
@@ -19,6 +21,7 @@ namespace DynamicProperty {
         /// <remarks>
         /// Any number of subscriptions can be made to dynamic property.  All subscriptions should be notified when <see cref="Value"/> changes.
         /// </remarks>
-        IDisposable Subscribe(Action<T> callback);
+        [NotNull]
+        IDisposable Subscribe([NotNull] Action<T> callback);
     }
 }

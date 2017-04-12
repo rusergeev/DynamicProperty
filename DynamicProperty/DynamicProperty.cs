@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace DynamicProperty
 {
@@ -12,6 +13,7 @@ namespace DynamicProperty
         /// <typeparam name="T">The data type</typeparam>
         /// <param name="initialValue">The initial value of the property</param>
         /// <returns></returns>
+        [NotNull]
         public static IDynamicProperty<T> Create<T>(T initialValue) {
             return new BasicValue<T>(initialValue);
         }
@@ -36,7 +38,8 @@ namespace DynamicProperty
         /// can do anything it wants with the written value.
         /// </param>
         /// <returns></returns>
-        public static IDynamicProperty<T> Create<T>(Func<T> read, Action<T> write) {
+        [NotNull]
+        public static IDynamicProperty<T> Create<T>([NotNull] Func<T> read, [NotNull] Action<T> write) {
             return new DynamicValue<T>(read, write);
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace DynamicProperty
 {
@@ -14,7 +15,8 @@ namespace DynamicProperty
         /// </summary>
         /// <param name="dependency"> A Dynamic Property, which evaluates its dependencies </param>
         /// <returns> a disposable transaction </returns>
-        public static IDisposable Instance(IDependency dependency) {
+        [NotNull]
+        public static IDisposable Instance([NotNull] IDependency dependency) {
             var id = Thread.CurrentThread.ManagedThreadId;
             if (!_map.ContainsKey(id))
                 _map[id] = new Transaction();
@@ -28,7 +30,7 @@ namespace DynamicProperty
         public void Dispose() {
             CheckOut();
         }
-        private void CheckIn(IDependency dependency) {
+        private void CheckIn([NotNull] IDependency dependency) {
             if (_stack.Any()){
                 var last = _stack.Peek();
                 last.DependsOn(dependency);
@@ -44,6 +46,7 @@ namespace DynamicProperty
         }
         private Transaction() { }
         private static readonly Dictionary<int, Transaction> _map = new Dictionary<int, Transaction>();
+        [ItemNotNull]
         private readonly Stack<IDependent> _stack = new Stack<IDependent>();
     }
 }

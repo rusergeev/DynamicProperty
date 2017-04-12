@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+
 namespace DynamicProperty {
     /// <summary>
     /// Subscription Factory
@@ -13,7 +15,8 @@ namespace DynamicProperty {
         /// </summary>
         /// <param name="callback"> callback to call when notify </param>
         /// <returns>an object which can be disposed to cancel the subscription </returns>
-        public IDisposable Create(T callback) {
+        [NotNull]
+        public IDisposable Create([NotNull] T callback) {
             var subscription = new Subscription(Unsubscribe);
             _callbacks[subscription] = callback;
             return subscription;
@@ -32,7 +35,7 @@ namespace DynamicProperty {
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
-        private void Unsubscribe(IDisposable subscription) {
+        private void Unsubscribe([NotNull] IDisposable subscription) {
             _callbacks.Remove(subscription);
         }
         private readonly IDictionary<IDisposable, T> _callbacks = new ConcurrentDictionary<IDisposable, T>();
