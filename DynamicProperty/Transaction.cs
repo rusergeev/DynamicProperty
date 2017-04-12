@@ -19,7 +19,7 @@ namespace DynamicProperty
         private void CheckIn(DependencyNode dependency) {
             if (_stack.Any()){
                 var last = _stack.Peek();
-                dependency.AddLink(last);
+                last.DependsOn(dependency);
             }
             _stack.Push(dependency);
         }

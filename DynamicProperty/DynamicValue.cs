@@ -1,7 +1,7 @@
 using System;
 
 namespace DynamicProperty {
-    public class DynamicValue<T> : BasicValue<T> {
+    class DynamicValue<T> : BasicValue<T> {
 		public DynamicValue(Func<T> read, Action<T> write) {
 			_read = read;
 			_write = write;

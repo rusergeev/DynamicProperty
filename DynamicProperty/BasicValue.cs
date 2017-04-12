@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DynamicProperty
 {
-    public class BasicValue<T> : DependencyNode, IDynamicProperty<T> {
+    class BasicValue<T> : DependencyNode, IDynamicProperty<T> {
         public BasicValue(T initialValue) {
             _value = initialValue;
         }

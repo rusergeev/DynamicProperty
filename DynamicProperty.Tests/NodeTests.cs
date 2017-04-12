@@ -33,7 +33,7 @@ namespace DynamicProperty.Tests
         {
             var a = new Invalidatable {Valid = true};
             var b = new Invalidatable();
-            b.AddLink(a);
+            a.DependsOn(b);
             b.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
         }
@@ -42,7 +42,7 @@ namespace DynamicProperty.Tests
         {
             var a = new Invalidatable {Valid = true};
             var b = new Invalidatable();
-            b.AddLink(a);
+            a.DependsOn(b);
             var c = new Invalidatable {Valid = true};
             b.Invalidate();
             Assert.That(c.Valid, Is.EqualTo(true));
@@ -52,12 +52,12 @@ namespace DynamicProperty.Tests
         {
             var a = new Invalidatable {Valid = true};
             var b = new Invalidatable { Valid = true };
-            b.AddLink(a);
+            a.DependsOn(b);
             var c = new Invalidatable();
-            c.AddLink(b);
+            b.DependsOn(c);
             b.CutDependency();
             a.Valid = true;
-            b.AddLink(a);
+            a.DependsOn(b);
             c.Invalidate();
             Assert.That(b.Valid, Is.EqualTo(true));
         }
@@ -67,8 +67,8 @@ namespace DynamicProperty.Tests
             var a = new Invalidatable {Valid = true};
             var b = new Invalidatable {Valid = true};
             var c = new Invalidatable();
-            c.AddLink(a);
-            c.AddLink(b);
+            a.DependsOn(c);
+            b.DependsOn(c);
             c.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
             Assert.That(b.Valid, Is.EqualTo(false));
@@ -79,8 +79,8 @@ namespace DynamicProperty.Tests
             var a = new Invalidatable { Valid = true };
             var b = new Invalidatable { Valid = true };
             var c = new Invalidatable { Valid = true };
-            c.AddLink(a);
-            b.AddLink(a);
+            a.DependsOn(c);
+            a.DependsOn(b);
             b.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
         }
@@ -90,8 +90,8 @@ namespace DynamicProperty.Tests
             var a = new Invalidatable { Valid = true };
             var b = new Invalidatable { Valid = true };
             var c = new Invalidatable { Valid = true };
-            c.AddLink(a);
-            b.AddLink(a);
+            a.DependsOn(c);
+            a.DependsOn(b);
             c.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
         }
@@ -100,9 +100,9 @@ namespace DynamicProperty.Tests
         {
             var a = new Invalidatable {Valid = true};
             var b = new Invalidatable {Valid = true};
-            b.AddLink(a);
+            a.DependsOn(b);
             var c = new Invalidatable();
-            c.AddLink(b);
+            b.DependsOn(c);
             c.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
             Assert.That(b.Valid, Is.EqualTo(false));

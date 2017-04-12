@@ -4,32 +4,40 @@ using System.Linq;
 using JetBrains.Annotations;
 
 namespace DynamicProperty {
+
     public abstract class DependencyNode {
-        public void AddLink([NotNull] DependencyNode to) {
-            if (to == this)
-                throw new InvalidOperationException("Don't set itself as link");
-            _to.Add(to);
-            to._from.Add(this);
+        public void DependsOn([NotNull] DependencyNode dependency)
+        {
+            if (dependency == this)
+                throw new InvalidOperationException("Don't depend on itself!!!");
+            _dependencies.Add(dependency);
+            dependency.Support(this);
+        }
+        private void Support([NotNull] DependencyNode dependent)
+        {
+            if (dependent == this)
+                throw new InvalidOperationException("Don't depend on itself!!!");
+            _dependents.Add(dependent);
         }
         public void CutDependency() {
-            foreach (var from in _from)
-                from._to.Remove(this);
-            _from.Clear();
+            foreach (var dependency in _dependencies)
+                dependency._dependents.Remove(this);
+            _dependencies.Clear();
         }
         public void Invalidate() {
-            foreach (var to in _to.ToList())
-                to.BurnUp();
-            _to.Clear();
+            foreach (var dependent in _dependents.ToList())
+                dependent.BurnUp();
+            _dependents.Clear();
         }
         private void BurnUp(){
             Eval();
-            foreach (var to in _to)
-                to.BurnUp();
-            _to.Clear();
-            _from.Clear();
+            foreach (var dependent in _dependents)
+                dependent.BurnUp();
+            _dependents.Clear();
+            _dependencies.Clear();
         }
         protected abstract void Eval();
-        private readonly ICollection<DependencyNode> _to = new HashSet<DependencyNode>();
-        private readonly ICollection<DependencyNode> _from = new HashSet<DependencyNode>();
+        private readonly ICollection<DependencyNode> _dependents = new HashSet<DependencyNode>();
+        private readonly ICollection<DependencyNode> _dependencies = new HashSet<DependencyNode>();
     }
 }
