@@ -23,34 +23,16 @@ namespace DynamicProperty.Tests
             Assert.That(a.Valid, Is.EqualTo(false));
         }
         [Test]
-        public void LinkItselfValidates()
+        public void InvalidateAffectItself()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
-            Assert.That(a.Valid, Is.EqualTo(true));
-        }
-        [Test]
-        public void NodeIsValidWhenLinked()
-        {
-            var a = new Invalidatable();
-            var b = new Invalidatable();
-            b.AddLink(b);
-            a.AddLink(b);
-            Assert.That(a.Valid, Is.EqualTo(true));
-        }
-        [Test]
-        public void InvalidateItselfWorks()
-        {
-            var a = new Invalidatable();
-            a.AddLink(a);
+            var a = new Invalidatable {Valid = true};
             a.Invalidate();
             Assert.That(a.Valid, Is.EqualTo(false));
         }
         [Test]
         public void InvalidatefWorksOnDependent()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
+            var a = new Invalidatable {Valid = true};
             var b = new Invalidatable();
             b.AddLink(a);
             b.Invalidate();
@@ -59,26 +41,23 @@ namespace DynamicProperty.Tests
         [Test]
         public void InvalidateDoesNotWorksOnSiblings()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
+            var a = new Invalidatable {Valid = true};
             var b = new Invalidatable();
             b.AddLink(a);
-            var c = new Invalidatable();
-            c.AddLink(c);
+            var c = new Invalidatable {Valid = true};
             b.Invalidate();
             Assert.That(c.Valid, Is.EqualTo(true));
         }
         [Test]
-        public void InvalidateDisconnectsFromFurtherDependency()
+        public void CutTailDisconnectsFromFurtherDependency()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
-            var b = new Invalidatable();
+            var a = new Invalidatable {Valid = true};
+            var b = new Invalidatable { Valid = true };
             b.AddLink(a);
             var c = new Invalidatable();
             c.AddLink(b);
-            b.Invalidate();
-            a.AddLink(a);
+            b.CutDependency();
+            a.Valid = true;
             b.AddLink(a);
             c.Invalidate();
             Assert.That(b.Valid, Is.EqualTo(true));
@@ -86,10 +65,8 @@ namespace DynamicProperty.Tests
         [Test]
         public void InvalidateWorksOnMultipleDependantBroad()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
-            var b = new Invalidatable();
-            b.AddLink(b);
+            var a = new Invalidatable {Valid = true};
+            var b = new Invalidatable {Valid = true};
             var c = new Invalidatable();
             c.AddLink(a);
             c.AddLink(b);
@@ -100,9 +77,8 @@ namespace DynamicProperty.Tests
         [Test]
         public void InvalidateWorksInDepth()
         {
-            var a = new Invalidatable();
-            a.AddLink(a);
-            var b = new Invalidatable();
+            var a = new Invalidatable {Valid = true};
+            var b = new Invalidatable {Valid = true };
             b.AddLink(a);
             var c = new Invalidatable();
             c.AddLink(b);

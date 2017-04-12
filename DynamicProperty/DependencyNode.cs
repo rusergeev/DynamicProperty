@@ -8,36 +8,33 @@ namespace DynamicProperty
     {
         public void AddLink([NotNull] DependencyNode to)
         {
-            Valid = true;
             if (to == this)
-                return;
-           if(!to.Valid)
-                throw new InvalidOperationException("the dependent should be already valid!");
+                throw new InvalidOperationException("Don't set itself as link");
             _to.Add(to);
             to._from.Add(this);
         }
 
-        public void Invalidate()
+        //todo: better name
+        public void CutDependency()
         {
             foreach (var from in _from)
             {
                 from._to.Remove(this);
             }
-            BurnForward();
         }
-
-        private void BurnForward()
+        //todo: better name
+        public void Invalidate()
         {
             Valid = false;
             foreach (var to in _to)
             {
-                to.BurnForward();
+                to.Invalidate();
             }
             _to.Clear();
             _from.Clear();
         }
 
-        public bool Valid { get; private set; }
+        public bool Valid { get; set; }
 
         private readonly ICollection<DependencyNode> _to = new HashSet<DependencyNode>();
         private readonly ICollection<DependencyNode> _from = new HashSet<DependencyNode>();

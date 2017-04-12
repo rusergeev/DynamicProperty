@@ -3,61 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace DynamicProperty
-{
-	internal interface IDependent : IDependency
-	{
-		void Invalidate();
-		void AddDependendency(IDependency dependant);
-		void RemoveDependency(IDependency dependant);
-	}
-	internal interface IDependency
-	{
-		void AddDependendent(IDependent dependant);
-		void RemoveDependent(IDependent dependant);
-	}
-	class Transaction : IDisposable
-	{
-		public static IDisposable Instance(IDependency dependency)
-		{
+namespace DynamicProperty {
+	class Transaction : IDisposable {
+		public static IDisposable Instance(DependencyNode dependency){
 			var id = Thread.CurrentThread.ManagedThreadId;
 			if (!_map.ContainsKey(id))
 				_map[id] = new Transaction();
 			_map[id].CheckIn(dependency);
 			return _map[id];
 		}
-		public void Dispose()
-		{
+		public void Dispose(){
 			CheckOut();
 		}
-		private void CheckIn(IDependency dependency)
+		private void CheckIn(DependencyNode dependency)
 		{
 			//_access.WaitOne();
-
-			if (_stack.Any())
-			{
+			if (_stack.Any()){
 				var last = _stack.Peek();
-				if (last != null)
-					dependency.AddDependendent(last);
+				dependency.AddLink(last);
 			}
-			var dependent = dependency as IDependent;
-			_stack.Push(dependent);
-#if DEBUG
-			property = dependent;
-#endif
+			_stack.Push(dependency);
 		}
-		private void CheckOut()
-		{
-#if DEBUG
-			var top =
-#endif
+		private void CheckOut(){
 			_stack.Pop();
-#if DEBUG
-			//if (!top.Equals(property))
-			//	throw new InvalidOperationException("Transaction Stack broken!!!");
-#endif
-			if (!_stack.Any())
-			{
+			if (!_stack.Any()){
 				var id = Thread.CurrentThread.ManagedThreadId;
 				_map.Remove(id);
 			}
@@ -65,30 +34,18 @@ namespace DynamicProperty
 		}
 		private Transaction() { }
 		private static readonly Dictionary<int, Transaction> _map = new Dictionary<int, Transaction>();
-		private Stack<IDependent> _stack = new Stack<IDependent>();
-		private readonly Mutex _access = new Mutex(initiallyOwned: true);
-#if DEBUG
-	    private IDependent property;
-#endif
+		private readonly Stack<DependencyNode> _stack = new Stack<DependencyNode>();
+		//private readonly Mutex _access = new Mutex(initiallyOwned: true);
 	}
-	public class DynamicValue<T> : BasicValue<T>, IDependent {
+	public class DynamicValue<T> : BasicValue<T> {
 		public DynamicValue(Func<T> read, Action<T> write) {
 			_read = read;
 			_write = write;
- 			Evaluate();
-		}
-		void IDependent.Invalidate() {
-			_valid = false;
-			InvalidateDependants();
-		}
-		void IDependent.AddDependendency(IDependency dependency) {
-			_dependencies.Add(dependency);
-		}
-		void IDependent.RemoveDependency(IDependency dependency) {
-			_dependencies.Remove(dependency);
-		}
+		    using (Transaction.Instance(this))
+		    { base.Set(_read()); }
+        }
 		protected override T Get() {
-			if (!_valid)
+			if (!Valid)
 				Evaluate();
 			return base.Get();
 		}
@@ -96,69 +53,42 @@ namespace DynamicProperty
 			_write(value);
 		}
 		private void Evaluate() {
-			RemoveDependencies();
-			using (Transaction.Instance(this)) {
-				base.Set(_read());
-				_valid = true;
-			}
-		}
-		private void RemoveDependencies(){
-			var dependencies = new List<IDependency>(_dependencies);
-			foreach( var dependency in dependencies){
-				dependency.RemoveDependent(this);
-			}
+            CutDependency();
+            base.Set(_read());
 		}
 		private readonly Func<T> _read;
 		private readonly Action<T> _write;
-		private bool _valid;
-		private readonly HashSet<IDependency> _dependencies = new HashSet<IDependency>();
 	}
-	public class BasicValue<T> : IDynamicProperty<T>, IDependency
+	public class BasicValue<T> : DependencyNode, IDynamicProperty<T>
 	{
 		public BasicValue(T initialValue){
 			_value = initialValue;
 		}
 		T IDynamicProperty<T>.Value{
-		    get { return Get(); }
-		    set {
-				Set(value);
-				InvalidateDependants();
-			}
+		    get {
+		        using (Transaction.Instance(this))
+		        { return Get(); }
+            }
+		    set { Set(value); }
 		}
-		IDisposable IDynamicProperty<T>.Subscribe(Action<T> callback)
-		{
+		IDisposable IDynamicProperty<T>.Subscribe(Action<T> callback){
 			return _subscriptions.Create(callback);
-		}
-		void IDependency.AddDependendent(IDependent dependant) {
-			_dependables.Add(dependant);
-			dependant.AddDependendency(this);
-		}
-		void IDependency.RemoveDependent(IDependent dependant) {
-			_dependables.Remove(dependant);
-			dependant.RemoveDependency(this);
 		}
 		protected BasicValue() { }
 		protected virtual T Get(){
-			using (Transaction.Instance(this))
-			{ return _value; }
+		    return _value;
 		}
 		protected virtual void Set(T value){
+            Invalidate();
 			_value = value;
+		    Valid = true;
 			Notify(value);
-		}
-		protected void InvalidateDependants(){
-			var dependables =  new List<IDependent>(_dependables);
-			_dependables.Clear();
-			foreach (var dependable in dependables){
-				dependable.Invalidate();
-			}
 		}
 		private void Notify(T value){
 			foreach (var callback in _subscriptions.AsParallel())
 				callback(value);
 		}
 		private T _value;
-		private readonly HashSet<IDependent> _dependables = new HashSet<IDependent>();
 		private readonly Subscription<Action<T>> _subscriptions = new Subscription<Action<T>>();
 	}
 }
