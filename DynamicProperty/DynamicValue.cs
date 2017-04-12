@@ -18,11 +18,14 @@ namespace DynamicProperty {
 		}
 		private void Evaluate() {
             CutDependency();
-            base.Set(_read());
+		    T result;
+		    using (Transaction.Instance(this))
+            { result = _read(); }
+            base.Set(result);
 		}
 
         protected override void Eval(){
-                Evaluate();
+            Evaluate();
         }
 		private readonly Func<T> _read;
 		private readonly Action<T> _write;
