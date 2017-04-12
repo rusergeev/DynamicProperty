@@ -52,11 +52,14 @@ namespace DynamicProperty {
             base.Set(value);
         }
         private T TransactionRead() {
-            using (Transaction.Instance(this))
-            { return _read(); }
+            lock (_access) {
+                using (Transaction.Instance(this))
+                { return _read(); }
+            }
         }
         private readonly Func<T> _read;
         private readonly Action<T> _write;
         private readonly ICollection<IDependency> _dependencies = new HashSet<IDependency>();
+        private readonly object _access = new object();
     }
 }
