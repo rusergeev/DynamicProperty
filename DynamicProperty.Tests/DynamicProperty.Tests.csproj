@@ -54,7 +54,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="NodeTests.cs" />
     <Compile Include="TestSet1Basic.cs" />
     <Compile Include="TestSet2Intermediate.cs" />
     <Compile Include="TestSet3Advanced.cs" />
