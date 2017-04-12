@@ -4,7 +4,12 @@ namespace DynamicProperty.Tests
 {
     public class Invalidatable : DependencyNode
     {
+        protected override void Eval()
+        {
+            Valid = false;
+        }
 
+        public bool Valid { get; set; }
     }
 
     [TestFixture]
@@ -17,11 +22,11 @@ namespace DynamicProperty.Tests
             Assert.That(a.Valid, Is.EqualTo(false));
         }
         [Test]
-        public void InvalidateAffectItself()
+        public void InvalidateDoesNotAffectItself()
         {
             var a = new Invalidatable {Valid = true};
             a.Invalidate();
-            Assert.That(a.Valid, Is.EqualTo(false));
+            Assert.That(a.Valid, Is.EqualTo(true));
         }
         [Test]
         public void InvalidatefWorksOnDependent()
@@ -69,10 +74,32 @@ namespace DynamicProperty.Tests
             Assert.That(b.Valid, Is.EqualTo(false));
         }
         [Test]
+        public void InvalidateWorksOnMultipleDependencies1()
+        {
+            var a = new Invalidatable { Valid = true };
+            var b = new Invalidatable { Valid = true };
+            var c = new Invalidatable { Valid = true };
+            c.AddLink(a);
+            b.AddLink(a);
+            b.Invalidate();
+            Assert.That(a.Valid, Is.EqualTo(false));
+        }
+        [Test]
+        public void InvalidateWorksOnMultipleDependencies2()
+        {
+            var a = new Invalidatable { Valid = true };
+            var b = new Invalidatable { Valid = true };
+            var c = new Invalidatable { Valid = true };
+            c.AddLink(a);
+            b.AddLink(a);
+            c.Invalidate();
+            Assert.That(a.Valid, Is.EqualTo(false));
+        }
+        [Test]
         public void InvalidateWorksInDepth()
         {
             var a = new Invalidatable {Valid = true};
-            var b = new Invalidatable {Valid = true };
+            var b = new Invalidatable {Valid = true};
             b.AddLink(a);
             var c = new Invalidatable();
             c.AddLink(b);

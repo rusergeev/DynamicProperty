@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicValue.cs" />
     <Compile Include="DependencyNode.cs" />
     <Compile Include="DynamicValue.cs" />
     <Compile Include="IDependencySource.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Subscription.cs" />
     <Compile Include="SubscribableProperty.cs" />
     <Compile Include="ThreadStack.cs" />
+    <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

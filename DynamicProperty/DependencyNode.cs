@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace DynamicProperty {
@@ -15,13 +16,18 @@ namespace DynamicProperty {
                 from._to.Remove(this);
         }
         public void Invalidate() {
-            Valid = false;
+            foreach (var to in _to.ToList())
+                to.BurnUp();
+            _to.Clear();
+        }
+        private void BurnUp(){
+            Eval();
             foreach (var to in _to)
-                to.Invalidate();
+                to.BurnUp();
             _to.Clear();
             _from.Clear();
         }
-        public virtual bool Valid { get; set; }
+        protected abstract void Eval();
         private readonly ICollection<DependencyNode> _to = new HashSet<DependencyNode>();
         private readonly ICollection<DependencyNode> _from = new HashSet<DependencyNode>();
     }
