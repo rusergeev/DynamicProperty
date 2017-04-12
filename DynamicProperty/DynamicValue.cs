@@ -48,14 +48,14 @@ namespace DynamicProperty {
                 dependency.DoesNotSupport(this);
         }
         private void Evaluate() {
-            var value = TransactionRead();
-            base.Set(value);
+            lock (_access) {
+                var value = TransactionRead();
+                base.Set(value);
+            }
         }
         private T TransactionRead() {
-            lock (_access) {
-                using (Transaction.Instance(this))
-                { return _read(); }
-            }
+            using (Transaction.Instance(this))
+            { return _read(); }
         }
         private readonly Func<T> _read;
         private readonly Action<T> _write;

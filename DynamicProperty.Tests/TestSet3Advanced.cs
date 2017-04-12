@@ -81,7 +81,7 @@ namespace DynamicProperty.Tests
                                     {
                                         waitForBarrier = false;
                                         Assert.IsTrue(barrier.SignalAndWait(waitTime));
-                                        Thread.Sleep(TimeSpan.FromMilliseconds(200)); // give the other thread time to do its work
+                                        Thread.Sleep(TimeSpan.FromMilliseconds(50)); // give the other thread time to do its work
                                     }
 
                                     evaluating = false;
