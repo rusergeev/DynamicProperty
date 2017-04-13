@@ -55,6 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>%25nuget%25 pack "$(SolutionDir)DynamicProperty.nuspec" -NoPackageAnalysis -verbosity detailed -o Build -Version %25version%25 -p Configuration="%25config%25"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
