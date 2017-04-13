@@ -17,6 +17,6 @@
     <tags>sdk ecosystem dynamic property c#</tags>
   </metadata>
   <files>
-	<file src="DynamicProperty\bin\$()\DynamicProperty.dll" target="lib\net40\" />c
+	<file src="DynamicProperty\bin\$configuration$\DynamicProperty.dll" target="lib\net40\" />c
   </files>
 </package>
