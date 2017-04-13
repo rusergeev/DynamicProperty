@@ -274,6 +274,15 @@ namespace DynamicProperty.Tests
                 which.Value = 1;
                 Assert.That(p.Value, Is.EqualTo(1999));
             }
-        }
+            [Test]
+            public void CanIncrementTheValue()
+            {
+                var o = DynamicProperty.Create(100);
+                ++o.Value;
+                Assert.That(o.Value, Is.EqualTo(101));
+                o.Value++;
+                Assert.That(o.Value, Is.EqualTo(102));
+            }
+       }
     }
 }

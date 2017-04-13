@@ -1,18 +1,16 @@
 ﻿using System;
+using JetBrains.Annotations;
 
-namespace DynamicProperty
-{
+namespace DynamicProperty {
     /// <summary>
     /// Represents a property that can be observed or updated.
     /// </summary>
-    public interface IDynamicProperty<T>
-    {
+    public interface IDynamicProperty<T> {
         /// <summary>
         /// Gets or sets the value of the property.
         /// Whenever the value is updated, all observers will be notified of the new value.
         /// </summary>
         T Value { get; set; }
-
         /// <summary>
         /// Subscribes a callback to this dynamic property.
         /// Anytime this dynamic property value is modified, <paramref name="callback"/> should be called with the new value.
@@ -23,6 +21,7 @@ namespace DynamicProperty
         /// <remarks>
         /// Any number of subscriptions can be made to dynamic property.  All subscriptions should be notified when <see cref="Value"/> changes.
         /// </remarks>
-        IDisposable Subscribe(Action<T> callback);
+        [NotNull]
+        IDisposable Subscribe([NotNull] Action<T> callback);
     }
 }
