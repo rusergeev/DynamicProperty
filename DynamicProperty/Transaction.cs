@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 
-namespace DynamicProperty
+namespace DynamicProperties
 {
     /// <summary>
     /// builds stacks for a current thread, can work with several threads
@@ -13,7 +13,7 @@ namespace DynamicProperty
         /// <summary>
         ///
         /// </summary>
-        /// <param name="dependency"> A Dynamic Property, which evaluates its dependencies </param>
+        /// <param name="dependency"> A Dynamic DynamicProperty, which evaluates its dependencies </param>
         /// <returns> a disposable transaction </returns>
         [NotNull]
         public static IDisposable Instance([NotNull] IDependency dependency) {

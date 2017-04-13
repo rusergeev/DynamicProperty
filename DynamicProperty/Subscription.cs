@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-namespace DynamicProperty {
+
+namespace DynamicProperties {
     /// <summary>
     /// disposable Subscription object
     /// </summary>

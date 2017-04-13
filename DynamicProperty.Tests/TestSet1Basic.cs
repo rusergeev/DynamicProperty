@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using NUnit.Framework;
 
-namespace DynamicProperty.Tests
+namespace DynamicProperties.Tests
 {
     /// <summary>
     /// Tests the minimum required features for this coding quiz

@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace DynamicProperty {
+namespace DynamicProperties {
     /// <summary>
     /// Subscription Factory
     /// </summary>

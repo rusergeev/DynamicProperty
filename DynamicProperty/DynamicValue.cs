@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DynamicProperty {
+namespace DynamicProperties {
     /// <summary>
     /// calculated dynamic property
     /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace DynamicProperty {
+namespace DynamicProperties {
     class BasicValue<T> : IDynamicProperty<T>, IDependency {
         protected BasicValue() { }
         /// <summary>

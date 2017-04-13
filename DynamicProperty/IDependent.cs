@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
-namespace DynamicProperty {
+
+namespace DynamicProperties {
     /// <summary>
     /// Dependency consumer -  <see cref="DynamicValue{T}"/>
     /// </summary>

@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicProperty {
+namespace DynamicProperties {
     /// <summary>
     /// Represents a property that can be observed or updated.
     /// </summary>
