@@ -1,0 +1,22 @@
+
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DynamicProperty</id>
+    <version>$version$</version>
+    <title>Dynamic Property - C# library</title>
+    <authors>Dmitry Sergeev</authors>
+    <owners>Dmitry Sergeev</owners>
+    <licenseUrl>DynamicProperty/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/rusergeev/DynamicProperty/blob/master/README.md</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/rusergeev/DynamicProperty/master/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The real power is in the calculated dynamic properties, which allow you to define dynamic properties which are composed of other dynamic properties.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright &#x00A9; Dmitry Sergeev.  All rights reserved.</copyright>
+    <tags>sdk ecosystem dynamic property c#</tags>
+  </metadata>
+  <files>
+	<file src="DynamicProperty\bin\$()\DynamicProperty.dll" target="lib\net40\" />c
+  </files>
+</package>
